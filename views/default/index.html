@@ -1,0 +1,71 @@
+<html>
+	<body>
+        
+    <h3>Welcome to Taste Buds</h3>
+    
+    <!display logo>
+    <div id = "myLOGO">
+    {{=A(IMG(_src=URL('static/images', 'logo.png'), _alt="My Logo", _height = '60', _width = '200'), _href=URL('default','index'))}}
+    <!end of display logo>
+    </div>
+    
+    
+    <! The prompt the user to log in>
+    <div id = "myUserLogin">
+    {{if(auth.is_logged_in()):}}
+    	<h4>The user is logged in</h4>
+    	<p>welcome, {{=userINFO.first_name}}</p>
+    	{{=A("Add a recipe", _href = URL("addRecipe"))}}
+    	{{=A("Add a place", _href = URL("addRestaurant"))}}
+    	{{=A("Log out?", _href = URL("logout"))}}
+    {{else:}}
+    	<font size = "4" face = "Times" color = "blue"> {{=A("Log in/Register?", _href = URL("login"))}}<font>
+    {{pass}}
+    <br>
+    <!end of user log in>
+    </div>
+    
+    
+    <!display the tabs for sub-pages>
+    <div id = "mySubTabs">
+    <pre>
+    <font size = "5" face = "Times" color = "red">
+{{=A("HOME", _href = URL("index"))}}       {{=A("Recipe", _href = URL("recipe"))}}        {{=A("Discover", _href = URL("discover"))}}        {{=A("Community", _href = URL("community"))}}        {{=A("News", _href = URL("news"))}}
+_________________________________________________    
+</pre>
+    <!end of tabs or sub-pages>
+    </div>
+    
+    
+    <!display the top 3 recipes>
+	<div id = "myTopThreeRecipe">
+		<font size = "6" face = "Times" color = "green">
+		What to cook?<br>
+            {{for recipe in recipes:}}
+            {{=A(IMG(_src = URL('download', args = recipe.picture), _alt = recipe.title, _height = '70', _width = '200'), _href = URL('readRecipe', args = [recipe.id]))}}
+            {{pass}}
+            <br><br>
+	<!end of top 3 recipes>
+	</div>
+    
+    
+    <!display the top 3 restaurant>
+    <div id = "myTopThreeRestaurant">
+		<font size = "6" face = "Times" color = "orange">
+		Where to go?<br>
+		{{for place in places:}}
+            {{=A(IMG(_src = URL('download', args = place.picture), _alt = place.name, _height = '70', _width = '200'), _href = URL('readRestaurant', args = [place.id]))}}
+        {{pass}}
+		<!end of top 3 restaurant>
+	</div>
+    
+    
+    <!display the top 3 stars>
+    <div id = "myTopThreeStars">
+	<font size = "6" face = "Times" color = "red">
+	Tasting Stars<br><br><br><br><br><br>
+	<!end of top 3>
+	</div>             
+     
+    </body>
+</html>

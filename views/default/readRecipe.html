@@ -1,0 +1,13 @@
+<html>
+	<head>
+        <h2>Recipe's Name:  {{=recipe.title}}</h2>
+    </head>
+
+	<body>
+        <h5>made by: {{=recipe.owner.first_name}}  {{=recipe.owner.last_name}}</h5>
+        <li>uploaded time: {{=recipe.uploadTime}}</li>
+        <p>{{=IMG(_src = URL('download', args = recipe.picture), _alt = recipe.title, _height = '70', _width = '200')}}</p>
+        <li>current rating point:  {{=recipe.rating}}</li>
+        <p>Description: {{=recipe.description}} </p>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+<html>
+<h4>Recipe Page</h4>
+<body>
+<! The prompt the user to log in>
+    <div id = "myUserLogin">
+    {{if(auth.is_logged_in()):}}
+    	<h4>The user is logged in</h4>
+    	<p>welcome, {{=userINFO.first_name}}</p>
+    	<font size = "3" face = "Times" color = "green"> {{=A("Add a recipe", _href = URL("addRecipe"))}}<font>
+    	<font size = "4" face = "Times" color = "blue"> {{=A("Log out?", _href = URL("logout"))}}<font>
+            
+    {{else:}}
+    	<font size = "4" face = "Times" color = "blue"> {{=A("Log in/Register?", _href = URL("login"))}}<font>
+    {{pass}}
+    <br>
+    <!end of user log in>
+    </div>
+</body>
+</html>

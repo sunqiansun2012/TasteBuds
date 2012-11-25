@@ -1,0 +1,14 @@
+<html>
+	<head>
+        <h2>Restaurant's Name:  {{=place.name}}</h2>
+    </head>
+
+	<body>
+        <h5>uploaded by: {{=place.owner.first_name}}  {{=place.owner.last_name}}</h5>
+        <li>uploaded time: {{=place.uploadTime}}</li>
+        <p>{{=IMG(_src = URL('download', args = place.picture), _alt = place.name, _height = '180', _width = '180')}}</p>
+        <li>current rating point:  {{=place.rating}}</li>
+        <p>address: {{=place.location}}</p>
+        <p>Description: {{=place.description}} </p>
+    </body>
+</html>

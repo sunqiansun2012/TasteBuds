@@ -10,5 +10,13 @@
         <li>current rating point:  {{=place.rating}}</li>
         <p>address: {{=place.location}}</p>
         <p>Description: {{=place.description}} </p>
+        <div>{{=rateForm}}</div>
+        <div>
+            {{for c in commentList:}}
+            <li> commented by: {{=c.commentor}} </li> <br>
+            <li> at UTC Time: {{=c.rateDate}} </li> <br>
+            {{=c.comment}} <br> <br>
+            {{pass}}
+        </div>
     </body>
 </html>

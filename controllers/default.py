@@ -16,6 +16,8 @@ def index():
         userINFO = 0
     recipes = db().select(db.Recipes.ALL, orderby = ~db.Recipes.rating, limitby = (0, 3))
     places = db().select(db.Restaurants.ALL, orderby = ~db.Restaurants.rating, limitby = (0, 3))
+    
+    
     return dict(userINFO = userINFO, recipes = recipes, places = places)
     
 @auth.requires_login()    
@@ -58,14 +60,102 @@ def addRestaurant():
     
 def readRecipe():
     recipe = db.Recipes(request.args[0])
-    
-    return dict(recipe = recipe)   
+    session.currentRecipe = request.args[0]
+    rateForm = FORM('Rate or Comment this recipe?',
+                     INPUT(_type = 'submit', _value = 'Rate and Comment')
+                )
+    commentList = db(db.comments.belongTo == session.currentRecipe).select()      
+    if rateForm.process().accepted:
+        session.title = recipe.title
+        session.owner = recipe.owner.first_name + " " + recipe.owner.last_name
+        redirect(URL('rateRecipe'))
+    return dict(recipe = recipe, rateForm = rateForm, commentList = commentList)   
     
 def readRestaurant():
     place = db.Restaurants(request.args[0])
+    session.currentRestaurant = request.args[0]
+    rateForm = FORM('Rate or Comment this restaurant?',
+                     INPUT(_type = 'submit', _value = 'Rate and Comment')
+                )
+    commentList = db(db.rcomments.belongTo == session.currentRestaurant).select()            
+    if rateForm.process().accepted:
+        session.title = place.name
+        session.owner = place.owner.first_name + " " +place.owner.last_name
+        redirect(URL('rateRestaurant'))
+    return dict(place = place, rateForm = rateForm, commentList = commentList)
     
-    return dict(place = place)          
+@auth.requires_login()        
+def rateRecipe():
+    form = FORM(
+                'Select to Rate',
+                 SELECT('bad', 'good', 'very good', 'excellent', _name = 'rating'),
+                 BR(),BR(),
+                 
+                 'your comment: ', TEXTAREA(_name = 'commentText', requires = IS_NOT_EMPTY()),
+                 BR(),BR(),
+                 
+                 INPUT(_type = 'submit', _value = 'Go submit')
+                )
     
+    if form.process().accepted:
+        recipe = db.Recipes(session.currentRecipe)
+        currentRating = recipe.rating
+        if form.vars.rating == 'bad':
+            currentRating -= 1
+        if form.vars.rating == 'good':
+            currentRating += 1
+        if form.vars.rating == 'very good':
+            currentRating += 2         
+        if form.vars.rating == 'excellent':
+            currentRating += 3 
+                
+        userINFO = db.auth_user(auth.user_id)
+        db.comments.insert(comment = form.vars.commentText, belongTo = session.currentRecipe, commentor = userINFO.first_name + ' ' + userINFO.last_name, rateDate = datetime.utcnow())    
+                    
+        db(db.Recipes.id == session.currentRecipe).validate_and_update(rating = currentRating)
+        db.commit()
+        
+        redirect(URL('readRecipe', args = [session.currentRecipe]))
+              
+                
+    return dict(form = form)                    
+
+@auth.requires_login()                        
+def rateRestaurant():
+    form = FORM(
+                'Select to Rate',
+                 SELECT('bad', 'good', 'very good', 'excellent', _name = 'rating'),
+                 BR(),BR(),
+                 
+                 'your comment: ', TEXTAREA(_name = 'commentText', requires = IS_NOT_EMPTY()),
+                 BR(),BR(),
+                 
+                 INPUT(_type = 'submit', _value = 'Go submit')
+                )
+    
+    if form.process().accepted:
+        place = db.Restaurants(session.currentRestaurant)
+        currentRating = place.rating
+        if form.vars.rating == 'bad':
+            currentRating -= 1
+        if form.vars.rating == 'good':
+            currentRating += 1
+        if form.vars.rating == 'very good':
+            currentRating += 2         
+        if form.vars.rating == 'excellent':
+            currentRating += 3 
+                
+        userINFO = db.auth_user(auth.user_id)
+        db.rcomments.insert(comment = form.vars.commentText, belongTo = session.currentRestaurant, commentor = userINFO.first_name + ' ' + userINFO.last_name, rateDate = datetime.utcnow())    
+                    
+        db(db.Restaurants.id == session.currentRestaurant).validate_and_update(rating = currentRating)
+        db.commit()
+        
+        redirect(URL('readRestaurant', args = [session.currentRestaurant]))
+    return dict(form = form)
+    
+        
+                
 def user():
     """
     exposes:

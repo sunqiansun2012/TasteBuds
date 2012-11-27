@@ -9,5 +9,13 @@
         <p>{{=IMG(_src = URL('download', args = recipe.picture), _alt = recipe.title, _height = '70', _width = '200')}}</p>
         <li>current rating point:  {{=recipe.rating}}</li>
         <p>Description: {{=recipe.description}} </p>
+        <div>{{=rateForm}}</div>
+        <div>
+            {{for c in commentList:}}
+            <li> commented by: {{=c.commentor}} </li> <br>
+            <li> at UTC Time: {{=c.rateDate}} </li> <br>
+            {{=c.comment}} <br> <br>
+            {{pass}}
+        </div>
     </body>
 </html>

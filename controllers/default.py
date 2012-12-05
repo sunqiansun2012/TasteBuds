@@ -35,10 +35,18 @@ def recipe():
         userINFO = db.auth_user(auth.user_id)
     else:
         userINFO = 0
-    return dict(userINFO = userINFO)
+    recipeList = db(db.Recipes.owner == auth.user_id).select()    
+    recipes = db().select(db.Recipes.ALL, orderby = ~db.Recipes.rating)
+    return dict(userINFO = userINFO, recipeList = recipeList, recipes = recipes)
     
 def discover():
-    return dict()
+    if(auth.is_logged_in()):
+        userINFO = db.auth_user(auth.user_id)
+    else:
+        userINFO = 0
+    placeList = db(db.Restaurants.owner == auth.user_id).select()
+    places = db().select(db.Restaurants.ALL, orderby = ~db.Restaurants.rating)
+    return dict(userINFO = userINFO, placeList = placeList, places = places)
 
 def community():
     return dict()
@@ -94,7 +102,8 @@ def rateRecipe():
                  'your comment: ', TEXTAREA(_name = 'commentText', requires = IS_NOT_EMPTY()),
                  BR(),BR(),
                  
-                 INPUT(_type = 'submit', _value = 'Go submit')
+                 INPUT(_type = 'submit', _value = 'Go submit'),
+                 A("Cancel", _href = URL("readRecipe", args = [session.currentRecipe]), )
                 )
     
     if form.process().accepted:
@@ -130,7 +139,8 @@ def rateRestaurant():
                  'your comment: ', TEXTAREA(_name = 'commentText', requires = IS_NOT_EMPTY()),
                  BR(),BR(),
                  
-                 INPUT(_type = 'submit', _value = 'Go submit')
+                 INPUT(_type = 'submit', _value = 'Go submit'),
+                 A("Cancel", _href = URL("readRestaurant", args = [session.currentRestaurant]), )
                 )
     
     if form.process().accepted:
@@ -154,7 +164,18 @@ def rateRestaurant():
         redirect(URL('readRestaurant', args = [session.currentRestaurant]))
     return dict(form = form)
     
-        
+    
+def deleteRecipe():
+    db(db.Recipes.id == request.args[0]).delete()
+    db.commit()
+    redirect(URL("recipe"))
+    return dict()    
+    
+def deleteRestaurant():
+    db(db.Restaurants.id == request.args[0]).delete()
+    db.commit()
+    redirect(URL("discover"))
+    return dict()     
                 
 def user():
     """

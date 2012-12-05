@@ -10,6 +10,7 @@
         <li>current rating point:  {{=recipe.rating}}</li>
         <p>Description: {{=recipe.description}} </p>
         <div>{{=rateForm}}</div>
+        {{=A("Back to Main", _href = URL("index"))}}
         <div>
             {{for c in commentList:}}
             <li> commented by: {{=c.commentor}} </li> <br>

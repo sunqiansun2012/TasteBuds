@@ -1,1 +1,44 @@
 <h4>Discover Page</h4>
+<style>
+body
+{
+background-color:#a7a7a7;
+}
+</style>
+<body>
+<! The prompt the user to log in>
+    <div id = "myUserLogin">
+    {{if(auth.is_logged_in()):}}
+    	<h4>The user is logged in</h4>
+    	<p>welcome, {{=userINFO.first_name}}</p>
+    	<font size = "3" face = "Times" color = "green"> {{=A("Add a recipe", _href = URL("addRecipe"))}}<font>
+    	<font size = "3" face = "Times" color = "green"> {{=A("Add a place", _href = URL("addRestaurant"))}}<font>
+    	<font size = "4" face = "Times" color = "blue"> {{=A("Log out?", _href = URL("logout"))}}<font>
+            
+    {{else:}}
+    	<font size = "4" face = "Times" color = "blue"> {{=A("Log in/Register?", _href = URL("login"))}}<font>
+    {{pass}}
+    {{=A("Back to Main", _href = URL("index"))}}
+    <br>
+    <!end of user log in>
+    </div>
+    
+    {{if(auth.is_logged_in()):}}
+    	<div>
+    		<li> The places you uploaded </li>   
+    	</div>
+    	<div>
+            {{for place in placeList:}}
+            {{=A(place.name, _href = URL("readRestaurant", args = [place.id]))}} -------- {{=A("Delete", _href = URL("deleteRestaurant", args = [place.id]))}}<br>
+            {{pass}}
+        </div>
+    {{pass}}
+    <div>
+    <br><br><br> <font size = "7" face = "Times" color = "red"> Hot Restaurants: <font> <br><br>
+    {{for place in places:}}
+    <font size = "4" face = "Times" color = "pink"> {{=place.name}}   <font>
+    {{=A(IMG(_src = URL('download', args = place.picture), _alt = place.name, _height = '70', _width = '200'), _href = URL('readRestaurant', args = [place.id]))}}
+    {{pass}}
+    </div>
+    		
+</body>

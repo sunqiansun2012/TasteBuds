@@ -11,6 +11,7 @@
         <p>address: {{=place.location}}</p>
         <p>Description: {{=place.description}} </p>
         <div>{{=rateForm}}</div>
+        {{=A("Back to Main", _href = URL("index"))}}
         <div>
             {{for c in commentList:}}
             <li> commented by: {{=c.commentor}} </li> <br>

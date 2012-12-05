@@ -49,13 +49,13 @@ p20
 ssS'title'
 p21
 (dp22
-S'sortable'
+S'type'
 p23
-I3
-sS'type'
-p24
 S'string'
+p24
+sS'sortable'
 p25
+I3
 sS'sql'
 p26
 S'CHAR(1000)'

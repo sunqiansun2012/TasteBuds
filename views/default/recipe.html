@@ -1,5 +1,11 @@
 <html>
 <h4>Recipe Page</h4>
+<style>
+body
+{
+background-color:green;
+}
+</style>
 <body>
 <! The prompt the user to log in>
     <div id = "myUserLogin">
@@ -7,13 +13,34 @@
     	<h4>The user is logged in</h4>
     	<p>welcome, {{=userINFO.first_name}}</p>
     	<font size = "3" face = "Times" color = "green"> {{=A("Add a recipe", _href = URL("addRecipe"))}}<font>
+    	<font size = "3" face = "Times" color = "green"> {{=A("Add a place", _href = URL("addRestaurant"))}}<font>
     	<font size = "4" face = "Times" color = "blue"> {{=A("Log out?", _href = URL("logout"))}}<font>
             
     {{else:}}
     	<font size = "4" face = "Times" color = "blue"> {{=A("Log in/Register?", _href = URL("login"))}}<font>
     {{pass}}
+    {{=A("Back to Main", _href = URL("index"))}}
     <br>
     <!end of user log in>
+    
     </div>
+    {{if(auth.is_logged_in()):}}
+    	<div>
+    		<li> The recipes you uploaded </li>   
+    	</div>
+    	<div>
+            {{for recipe in recipeList:}}
+            {{=A(recipe.title, _href = URL("readRecipe", args = [recipe.id]))}} -------- {{=A("Delete", _href = URL("deleteRecipe", args = [recipe.id]))}}<br>
+            {{pass}}
+        </div>
+    {{pass}}	
+    <div>
+    <br><br><br>
+        <font size = "7" face = "Times" color = "red"> Hot Recipes: <font> <br><br>
+    {{for recipe in recipes:}}
+            <font size = "4" face = "Times" color = "pink"> {{=recipe.title}}   <font>
+            {{=A(IMG(_src = URL('download', args = recipe.picture), _alt = recipe.title, _height = '70', _width = '200'), _href = URL('readRecipe', args = [recipe.id]))}}
+            {{pass}}
+    </div>	
 </body>
 </html>
